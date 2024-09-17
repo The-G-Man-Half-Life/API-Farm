@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace API_Farm.Models;
 
 [Table("animal_types")]
-public class AnimalTypes
+public class AnimalType
 {
     [Column("id")]
     public int Id {get; set;}
