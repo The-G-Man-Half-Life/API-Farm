@@ -1,15 +1,24 @@
+using DotNetEnv;
+
+Env.Load();
+
+string host = Environment.GetEnvironmentVariable("DB_HOST");
+string databaseName = Environment.GetEnvironmentVariable("DATABASE_NAME");
+string port = Environment.GetEnvironmentVariable("DB_PORT");
+string username = Environment.GetEnvironmentVariable("DB_USERNAME");
+string password = Environment.GetEnvironmentVariable("DB_PASSWORD");
+
+var connectionString = $"server={host};port={port};database={databaseName};uid={username};password={password};";
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
