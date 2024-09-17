@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using API_Farm.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace API_Farm.Controllers.v1.AnimalTypes;
 
@@ -18,4 +20,17 @@ public class AnimalTypesController : ControllerBase
         Context = context;
     }
 
+    [HttpGet]
+    [SwaggerOperation(
+        Summary = "Retrieves all animal types"
+    )]
+    public async Task<IActionResult> GetAll(){
+        var animalTypes = await Context.AnimalTypes.ToListAsync();
+        
+        if(animalTypes.Count() == 0)
+        {
+            return NoContent();
+        }
+        return Ok(animalTypes);
+    }
 }

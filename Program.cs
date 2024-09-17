@@ -1,6 +1,7 @@
 using API_Farm.Data;
 using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 Env.Load();
 
@@ -19,7 +20,12 @@ options.UseMySql(connectionString, ServerVersion.Parse("8.0.20-mysql")));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c=>
+{
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "API Farm", Version = "v1" });
+        // Customize Swagger UI settings here.
+        c.EnableAnnotations();
+});
 
 var app = builder.Build();
 
