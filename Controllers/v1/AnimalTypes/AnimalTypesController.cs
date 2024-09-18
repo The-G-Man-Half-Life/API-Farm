@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using API_Farm.Data;
 using API_Farm.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -73,4 +75,44 @@ public class AnimalTypesController : ControllerBase
         }
         return Ok(animalTypes);
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] AnimalType updatedAnimalType)
+    {
+        var animalType = checkExistence(id);
+        if(animalType == false)
+        {
+            return NoContent();
+        }
+        updatedAnimalType.Id = id;
+        if (ModelState.IsValid == false)
+        {
+            return BadRequest(ModelState);
+        }
+        Context.Entry(updatedAnimalType).State = EntityState.Modified;
+        await Context.SaveChangesAsync();
+        return Ok("updated");
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+        var animalType = checkExistence(id);
+        if (animalType == false)
+        {
+            return NoContent();
+        }
+        var animalTypeUbication  = await Context.AnimalTypes.FirstOrDefaultAsync(at => at.Id ==id);
+        Context.AnimalTypes.Remove(animalTypeUbication);
+        await Context.SaveChangesAsync();
+        return Ok("deleted");
+    }
+
+
+    private bool checkExistence(int id)
+    {
+        return Context.AnimalTypes.Any(p=> p.Id == id);
+    }
 }
+
+
